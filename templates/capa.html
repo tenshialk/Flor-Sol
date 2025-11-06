@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <title>Biblioteca Virtual - Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/capa.css') }}">
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="nav-wrapper">
+                <div class="logo-container">
+                    <svg class="book-icon" width="50" height="50" viewBox="0 0 24 24" fill="#191970"> </svg>
+                    <h1>Flor e Sol</h1>
+                </div>
+                <nav class="main-nav">
+                    <a href="" class="nav-link">Inicio</a>
+                    <a href="{{ url_for('usuarios.autenticar') }}" class="nav-link">Login</a>
+                    <a href="{{ url_for('usuarios.create') }}" class="nav-link">Cadastro</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+        <div class="container">
+            <h1>Bem vindo a Flor e Sol</h1>
+            <p>Viva o verão com estilo — descubra as roupas de praia que combinam com você.</p>
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biblioteca Digital</title>
+</head>
+<body>
+
+  <!-- Barra de navegação -->
+  <nav class="top-nav">
+    <a href="{{ url_for('inicio') }}" class="nav-link">Início</a>
+    <a href="{{ url_for('usuarios.logout') }}" class="nav-link">Sair</a>
+    <a href="/templates/capa.html"></a>
+  </nav>
+
+  <!-- Mensagem de boas-vindas -->
+  <h1>👋 Seja bem-vindo(a)!</h1>
+  <p>É um prazer tê-lo(a) na nossa Loja.</p>
+</html>

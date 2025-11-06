@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <title>Biblioteca Virtual - Cadastro</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cadastro.css') }}">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="nav-wrapper">
+                <div class="logo-container">
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    {% set mensagens = get_flashed_messages() %} 
+    {% if mensagens %}     
+        <div class="alert alert-danger" role="alert">
+            {% for msg in mensagens %}
+                {{ msg }}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <main class="container">
+        <div class="cadastro-container">
+            <form class="cadastro-form" action="{{ url_for('usuarios.create') }}" method="POST">
+                <h2 style="text-align: center; color: #191970; margin-bottom: 30px;">Cadastro</h2>
+
+                <div class="form-group">
+                    <label for="nome">Nome Completo</label>
+                    <input type="text" id="nome" name="nome" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email" name="email" required>
+                    <div class="error-message" id="emailError">Por favor, insira um e-mail válido.</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="senha">Senha</label>
+                    <input type="password" id="senha" name="senha" required>
+                    <div class="error-message" id="passwordError">A senha deve ter pelo menos 6 caracteres.</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="csenha">Confirme sua Senha</label>
+                    <input type="password" id="csenha" name="csenha" required>
+                    <div class="error-message" id="confirmPasswordError">As senhas não coincidem.</div>
+                </div>
+
+                <button type="submit" class="cadastro-btn">Cadastrar</button>
+                <div class="login-link">
+                    Já tem uma conta? <a href="{{ url_for('usuarios.autenticar') }}">Faça login</a>
+                </div>
+            </form>
+        </div>
+    </main>
+</body>
+</html>
