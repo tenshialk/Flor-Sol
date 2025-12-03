@@ -3,7 +3,9 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from utils import db,lm
 from controllers.usuario import bp_usuarios
+from controllers.roupa_create import bp_roupa_create
 from models.usuario import Usuario
+from models.roupa_create import roupa_create
 from models.endereco import Endereco
 
 
@@ -41,10 +43,9 @@ def biblioteca():
 def inicio():
     return render_template('capa.html')
 
-@app.route('/livros_create')
-def livros_create():
-    return render_template('livros_create.html')
-
+@app.route('/roupa_create')
+def roupa_create():
+    return render_template('roupa_create.html')
 
 @app.route('/perfil')
 def perfil():

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <title>Cadastro de Roupas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cadastro.css') }}">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="nav-wrapper">
+                <div class="logo-container">
+                    <!-- Coloque seu logo aqui -->
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="cadastro-container">
+            <form class="cadastro-form" action="{{ url_for('roupa_create.create') }}" method="POST">
+                <h2 style="text-align: center; color: #191970; margin-bottom: 30px;">Cadastrar Roupa</h2>
+
+                <!-- TÍTULO -->
+                <div class="form-group">
+                    <label for="titulo">Título</label>
+                    <input type="text" id="titulo" name="titulo" required>
+                </div>
+
+                <!-- IMAGEM -->
+                <div class="form-group">
+                    <label for="imagem">Link da Imagem</label>
+                    <input type="text" id="imagem" name="imagem" placeholder="https://exemplo.com/imagem.jpg" required>
+                </div>
+
+                <!-- PREÇO -->
+                <div class="form-group">
+                    <label for="preco">Preço (R$)</label>
+                    <input type="number" step="0.01" id="preco" name="preco" required>
+                </div>
+
+                <!-- DESCRIÇÃO -->
+                <div class="form-group">
+                    <label for="descricao">Descrição</label>
+                    <textarea id="descricao" name="descricao" rows="4" required></textarea>
+                </div>
+
+                <button type="submit" class="cadastro-btn">Cadastrar</button>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

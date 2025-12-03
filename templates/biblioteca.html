@@ -4,30 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Biblioteca Digital</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/biblioteca.css') }}">
 </head>
 <body>
-
-  <!-- Barra de navegação -->
   <nav class="top-nav">
-    <a href="{{ url_for('inicio') }}" class="nav-link">Início</a>
+    <a href="{{url_for('inicio')}}" class="nav-link">Inicio</a>
     <a href="{{ url_for('perfil') }}" class="nav-link">Perfil</a>
     <a href="{{ url_for('usuarios.logout') }}" class="nav-link">Sair</a>
+    <a href="/templates/capa.html"></a>
   </nav>
 
   <div class="search-container">
-      <input type="text" class="search-input" placeholder="Pesquisar produtos, categorias ou marcas...">
-      <button class="search-button">Pesquisar</button>
+  <input type="text" class="search-input" placeholder="Pesquisar roupa">
+  <button class="search-button">Pesquisar</button>
 
-      <!-- BOTÃO APARECE APENAS PARA ADMIN -->
-      {% if current_user.is_authenticated and current_user.admin %}
-        <button class="admbutton">
-          <a href="{{ url_for('livros_create.create') }}">Criar novo produto</a>
-        </button>
-      {% endif %}
-  </div>
+  {% if current_user.is_authenticated and current_user.admin == 1 %}
+  <button class="admbutton">
+    <a href="{{ url_for('roupa_create.create') }}">Criar</a>
+  </button>
+  {% endif %}
+</div>
 
-  <h1>👋 Seja bem-vindo(a) à Loja de Roupas de Praia!</h1>
-  <p>Aproveite nossas coleções exclusivas ☀️👙🏖️</p>
-
-</body>
-</html>
