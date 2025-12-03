@@ -41,6 +41,10 @@ def biblioteca():
 def inicio():
     return render_template('capa.html')
 
+@app.route('/livros_create')
+def livros_create():
+    return render_template('livros_create.html')
+
 
 @app.route('/perfil')
 def perfil():

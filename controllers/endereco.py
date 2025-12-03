@@ -2,7 +2,6 @@ from utils import db
 
 class Endereco(db.Model):
     __tablename__ = "endereco"
-
     id = db.Column(db.Integer, primary_key=True)
 
     logradouro  = db.Column(db.String(200), nullable=False)
