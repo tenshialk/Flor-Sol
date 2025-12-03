@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Alterar Dados</title>
+</head>
+<body>
+
+    <h1>Alterar Seus Dados</h1>
+   <form action="{{ url_for('atualizar_dados') }}" method="POST">
+        <label>Nome</label><br>
+        <input type="text" name="nome" value="{{ dados.nome }}"><br><br>
+
+        <label>Email</label><br>
+        <input type="email" name="email" value="{{ dados.email }}"><br><br>
+
+        <label>senha</label><br>
+        <input type="text" name="senha" value="{{ dados.senha }}"><br><br>
+
+        <button type="submit">Salvar</button>
+    </form>
+
+</body>
+</html>
