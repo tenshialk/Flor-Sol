@@ -51,7 +51,17 @@
                     <div class="error-message" id="confirmPasswordError">As senhas não coincidem.</div>
                 </div>
 
+                <!-- CAMPO DE ADMINISTRADOR -->
+                <div class="form-group">
+                    <label for="is_admin">Administrador?</label>
+                    <select id="is_admin" name="is_admin" required>
+                        <option value="nao" selected>Não</option>
+                        <option value="sim">Sim</option>
+                    </select>
+                </div>
+
                 <button type="submit" class="cadastro-btn">Cadastrar</button>
+
                 <div class="login-link">
                     Já tem uma conta? <a href="{{ url_for('usuarios.autenticar') }}">Faça login</a>
                 </div>
