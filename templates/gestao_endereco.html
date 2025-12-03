@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Gerenciar Endereço</title>
+</head>
+<body>
+
+    <h1>Gerenciar Endereço</h1>
+
+    <!-- ================================ -->
+    <!-- FORMULÁRIO PARA CADASTRAR       -->
+    <!-- ================================ -->
+    <h2>Cadastrar Endereço</h2>
+
+    <form action="{{ url_for('salvar_endereco') }}" method="POST">
+
+        <label>Logradouro</label><br>
+        <input type="text" name="logradouro" required><br><br>
+
+        <label>Número</label><br>
+        <input type="text" name="numero" required><br><br>
+
+        <label>Complemento</label><br>
+        <input type="text" name="complemento"><br><br>
+
+        <label>Bairro</label><br>
+        <input type="text" name="bairro" required><br><br>
+
+        <label>Cidade</label><br>
+        <input type="text" name="cidade" required><br><br>
+
+        <label>Estado</label><br>
+        <input type="text" name="estado" required><br><br>
+
+        <label>CEP</label><br>
+        <input type="text" name="cep" required><br><br>
+
+        <label>Referência</label><br>
+        <input type="text" name="referencia"><br><br>
+
+        <button type="submit">Cadastrar</button>
+    </form>
+
+    <hr>
+
+
+    <!-- ================================ -->
+    <!-- FORMULÁRIO PARA EDITAR          -->
+    <!-- ================================ -->
+    <h2>Editar Endereço</h2>
+
+    <!-- Só funciona se a página receber um objeto "endereco" -->
+    <form action="{{ url_for('atualizar_endereco') }}" method="POST">
+
+        <input type="hidden" name="id" value="{{ endereco.id }}">
+
+        <label>Logradouro</label><br>
+        <input type="text" name="logradouro" value="{{ endereco.logradouro }}" required><br><br>
+
+        <label>Número</label><br>
+        <input type="text" name="numero" value="{{ endereco.numero }}" required><br><br>
+
+        <label>Complemento</label><br>
+        <input type="text" name="complemento" value="{{ endereco.complemento }}"><br><br>
+
+        <label>Bairro</label><br>
+        <input type="text" name="bairro" value="{{ endereco.bairro }}" required><br><br>
+
+        <label>Cidade</label><br>
+        <input type="text" name="cidade" value="{{ endereco.cidade }}" required><br><br>
+
+        <label>Estado</label><br>
+        <input type="text" name="estado" value="{{ endereco.estado }}" required><br><br>
+
+        <label>CEP</label><br>
+        <input type="text" name="cep" value="{{ endereco.cep }}" required><br><br>
+
+        <label>Referência</label><br>
+        <input type="text" name="referencia" value="{{ endereco.referencia }}"><br><br>
+
+        <button type="submit">Salvar Alterações</button>
+    </form>
+
+    <hr>
+
+
+    <!-- ================================ -->
+    <!-- FORMULÁRIO PARA EXCLUIR         -->
+    <!-- ================================ -->
+    <h2>Excluir Endereço</h2>
+
+    <form action="{{ url_for('excluir_endereco') }}" method="POST">
+        <input type="hidden" name="id" value="{{ endereco.id }}">
+        <p>Tem certeza que deseja excluir este endereço?</p>
+        <button type="submit" style="background:red; color:white;">Excluir Endereço</button>
+    </form>
+
+</body>
+</html>

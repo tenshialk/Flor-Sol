@@ -8,12 +8,25 @@
     <h1>Seus Dados de cadastro</h1>
     <p><b>Nome:</b> {{ dados.nome }}</p>
     <p><b>Email:</b> {{ dados.email }}</p>
-    <p><b>Senha</b> {{ dados.senha}}</p>
+    <p><b>Senha:</b> {{ dados.senha }}</p>
 
-    <h1>endereço residencial</h1>
-
-    
     <a href="/altera_seus_dados">Alterar Dados</a>
+
+    <hr>
+
+    <h2>Endereços</h2>
+        <p><b>Logradouro:</b> {{ endereco.logradouro }}</p>
+            <p><b>Número:</b> {{ endereco.numero }}</p>
+            <p><b>Complemento:</b> {{ endereco.complemento }}</p>
+            <p><b>Bairro:</b> {{ endereco.bairro }}</p>
+            <p><b>Cidade:</b> {{ endereco.cidade }}</p>
+            <p><b>Estado:</b> {{ endereco.estado }}</p>
+            <p><b>CEP:</b> {{ endereco.cep }}</p>
+            <p><b>Referência:</b> {{ endereco.referencia }}</p>
+
+   <a href="/gestao_endereco">Alterar Dados</a>
+
+
 
 </body>
 </html>

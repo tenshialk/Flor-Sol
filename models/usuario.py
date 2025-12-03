@@ -15,6 +15,6 @@ class Usuario(db.Model, UserMixin):
         self.email = email
         self.senha = senha
         self.admin = admin
-    
+
     def __repr__(self):
         return "<Usuario {}>".format(self.nome)
