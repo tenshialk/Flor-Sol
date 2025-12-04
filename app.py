@@ -34,9 +34,9 @@ def capa():
 def Volta():
     return render_template('volta.html')
 
-@app.route('/biblioteca', methods=['POST'])
+@app.route('/biblioteca')
 def biblioteca():
-    return render_template('biblioteca.html', roupas=roupas)
+    return render_template('biblioteca.html')
 
 @app.route('/inicio')
 def inicio():
