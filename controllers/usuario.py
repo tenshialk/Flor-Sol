@@ -73,8 +73,11 @@ def autenticar():
             return redirect(url_for('usuarios.autenticar'))
         if (senha is not None and check_password_hash(usuario.senha, senha)):
             login_user(usuario)
-            return redirect(url_for('biblioteca'))
+            return redirect(url_for('pagina_admin'))
         else:
+            
+            return redirect(url_for('biblioteca'))  # ou a página do usuário comum
+    else:
             flash('Dados incorretos')
             return redirect(url_for('usuarios.autenticar'))
       

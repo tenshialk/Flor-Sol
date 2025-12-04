@@ -1,4 +1,4 @@
-from flask import Flask, Blueprint, render_template, request, redirect , url_for
+from flask import Flask, Blueprint, render_template, request, redirect , url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from utils import db,lm
@@ -42,9 +42,16 @@ def biblioteca():
 def inicio():
     return render_template('capa.html')
 
-@app.route('/roupa_create')
+@app.route('/roupa_create', methods=['GET', 'POST'])
 def roupa_create():
+    if request.method == 'POST':
+        imagem = request.form.get('imagem')
+        preco = request.form.get('preco')
+        titulo = request.form.get('titulo')
+        descricao = request.form.get('descricao')
+        flash('Roupa cadastrada com sucesso!')
     return render_template('roupa_create.html')
+
 
 @app.route('/pagina_admin')
 def pagina_admin():
