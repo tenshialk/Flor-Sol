@@ -23,7 +23,7 @@ def create():
         db.session.add(nova_roupa)
         db.session.commit()
 
-        return redirect(url_for('biblioteca'))
+        return redirect(url_for('pagina_admin'))
 
 # ------------------ ATUALIZAR ------------------
 @login_required
@@ -50,12 +50,5 @@ def delete(id):
     roupa = roupa_create.query.filter_by(id=id).first()
     db.session.delete(roupa)
     db.session.commit()
-    return redirect(url_for('biblioteca'))
+    return redirect(url_for('bliblioteca'))
 
-
-# ------------------ RECUPERAR E LISTAR ------------------
-@bp_roupa_create.route('/recovery')
-def recovery():
-    roupas = roupa_create.query.all()
-    print(roupas)
-    return render_template("biblioteca.html", roupas=roupas)

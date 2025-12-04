@@ -34,10 +34,9 @@ def capa():
 def Volta():
     return render_template('volta.html')
 
-@app.route('/biblioteca')
+@app.route('/biblioteca', methods=['POST'])
 def biblioteca():
-    return render_template('biblioteca.html')
-
+    return render_template('biblioteca.html', roupas=roupas)
 
 @app.route('/inicio')
 def inicio():
@@ -47,9 +46,17 @@ def inicio():
 def roupa_create():
     return render_template('roupa_create.html')
 
+@app.route('/pagina_admin')
+def pagina_admin():
+    return render_template('pagina_admin.html')
+
 @app.route('/perfil')
 def perfil():
     return render_template('perfil.html')
+
+@app.route('/roupa_update')
+def roupa_update():
+    return render_template('roupa_update.html')
 
 @app.route('/gestao_endereco')
 def gestao_endereco():

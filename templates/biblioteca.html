@@ -13,15 +13,5 @@
     <a href="{{ url_for('usuarios.logout') }}" class="nav-link">Sair</a>
     <a href="/templates/capa.html"></a>
   </nav>
-
-  <div class="search-container">
-  <input type="text" class="search-input" placeholder="Pesquisar roupa">
-  <button class="search-button">Pesquisar</button>
-
-  {% if current_user.is_authenticated and current_user.admin == 1 %}
-  <button class="admbutton">
-    <a href="{{ url_for('roupa_create.create') }}">Criar</a>
-  </button>
-  {% endif %}
 </div>
 
