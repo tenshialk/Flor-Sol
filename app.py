@@ -52,6 +52,14 @@ def roupa_create():
         flash('Roupa cadastrada com sucesso!')
     return render_template('roupa_create.html')
 
+@app.route('/suporte', methods=['GET', 'POST'])
+def suporte():
+    return render_template('suporte.html')
+
+@app.route('/pedido de suporte')
+def pedidodesuporte():
+    return render_template('pedido de suporte.html')
+
 
 @app.route('/pagina_admin')
 def pagina_admin():
