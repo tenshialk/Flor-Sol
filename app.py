@@ -6,7 +6,7 @@ from controllers.usuario import bp_usuarios
 from controllers.roupa_create import bp_roupa_create
 from models.usuario import Usuario
 from models.roupa_create import roupa_create
-from models.suporte import Suporte
+from models.suporte_create import Suporte
 from models.pedidos_suporte import Suporte
 from models.endereco import Endereco
 
