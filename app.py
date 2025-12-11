@@ -1,4 +1,4 @@
-from flask import Flask, Blueprint, render_template, request, redirect , url_for, flash
+from flask import Flask, Blueprint, render_template, request, redirect , url_for, flash, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from utils import db,lm
@@ -54,10 +54,13 @@ def roupa_create():
         flash('Roupa cadastrada com sucesso!')
     return render_template('roupa_create.html')
 
-@app.route('/suporte', methods=['GET', 'POST'])
-def suporte():
-    return render_template('suporte.html')
+@app.route('/suporte_create', methods=['GET', 'POST'])
+def suporte_create():
+    return render_template('suporte_create.html')
 
+@app.route('/carrinho')
+def carrinho():
+    return render_template('carrinho.html')
 
 @app.route("/pedidos_suporte")
 def pedidos_suporte():
@@ -66,6 +69,7 @@ def pedidos_suporte():
 @app.route('/pagina_admin')
 def pagina_admin():
     return render_template('pagina_admin.html')
+
 
 @app.route('/perfil')
 def perfil():

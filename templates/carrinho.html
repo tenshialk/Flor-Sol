@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>carrinho</title>
+</head>
+<body>
+    
+    <h2>Seu Carrinho</h2>
+        <div class="produtos-container">
+        {% if carrinho %}
+            {% for p in carrinho %}
+            <div class="produto-card">
+                <img src="{{ p.imagem }}" alt="{{ p.titulo }}" class="produto-imagem">
+                <h3>{{ p.titulo }}</h3>
+                <p>{{ p.descricao }}</p>
+                <p>Preço: R$ {{ p.preco }}</p>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>Seu carrinho está vazio.</p>
+        {% endif %}
+        </div>
+</body>
+</html>
