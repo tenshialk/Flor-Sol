@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Suporte</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/suporte_create.css') }}">
+</head>
+<body>
+
+    <h1>Gerenciar Suporte</h1>
+    <h2>Enviar Mensagem</h2>
+    <form action="{{ url_for('suporte_create') }}" method="POST">
+        <label>Nome</label><br>
+        <input type="text" name="nome" required><br><br>
+
+        <label>Email</label><br>
+        <input type="email" name="email" required><br><br>
+
+        <label>Mensagem</label><br>
+        <textarea name="mensagem" required></textarea><br><br>
+
+        <button type="submit">Enviar Mensagem</button>
+    </form>
+    <hr>

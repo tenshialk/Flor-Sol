@@ -7,7 +7,6 @@ from controllers.roupa_create import bp_roupa_create
 from models.usuario import Usuario
 from models.roupa_create import roupa_create
 from models.suporte_create import Suporte
-from models.pedidos_suporte import Suporte
 from models.endereco import Endereco
 
 
@@ -54,22 +53,18 @@ def roupa_create():
         flash('Roupa cadastrada com sucesso!')
     return render_template('roupa_create.html')
 
-@app.route('/suporte_create', methods=['GET', 'POST'])
-def suporte_create():
-    return render_template('suporte_create.html')
-
 @app.route('/carrinho')
 def carrinho():
     return render_template('carrinho.html')
 
-@app.route("/pedidos_suporte")
-def pedidos_suporte():
-    return render_template("pedidos_suporte.html")
+@app.route('/suporte')
+def suporte():
+    suporte = Suporte.query.first()  # pega o primeiro suporte
+    return render_template('suporte.html', suporte=suporte)
 
 @app.route('/pagina_admin')
 def pagina_admin():
     return render_template('pagina_admin.html')
-
 
 @app.route('/perfil')
 def perfil():
@@ -83,6 +78,11 @@ def roupa_update():
 def gestao_endereco():
     endereco = Endereco.query.first()  # pegar o primeiro endereço
     return render_template('gestao_endereco.html', endereco=endereco)
+
+@app.route('/suporte')
+def suporte():
+    suporte= pedidos_suporte.query.first()  # pegar o primeiro endereço
+    return render_template('suporte.html', suporte=suporte)
 
 @app.route('/salvar_endereco', methods=['POST'])
 def salvar_endereco():
@@ -114,6 +114,37 @@ def salvar_endereco():
 
     # Redireciona para a página que exibe o endereço cadastrado
     return render_template('salvar_endereco.html', endereco=endereco)
+
+@app.route('/salvar_suporte', methods=['POST'])
+def salvar_suporte():
+    nome     = request.form['nome']
+    email    = request.form['email']
+    mensagem = request.form['mensagem']
+
+    suporte = Suporte(nome=nome, email=email, mensagem=mensagem)
+    db.session.add(suporte)
+    db.session.commit()
+
+    # Passa o objeto 'suporte' para o template
+    return render_template('salvar_suporte.html', suporte=suporte)
+
+
+@app.route('/atualizar_suporte', methods=['POST'])
+def atualizar_suporte():
+    # Pega o objeto Suporte pelo id
+    suporte = Suporte.query.get(request.form['id'])
+    
+    # Atualiza os campos
+    suporte.nome     = request.form['nome']
+    suporte.email    = request.form['email']
+    suporte.mensagem = request.form['mensagem']
+    
+    # Salva as alterações
+    db.session.commit()
+    
+    # Redireciona para a página de gestão de suportes
+    return redirect(url_for('atualizar_suporte'))  #
+
 
 
 @app.route('/atualizar_endereco', methods=['POST'])
