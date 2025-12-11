@@ -9,4 +9,4 @@ class Suporte(db.Model):
         self.mensagem = mensagem
     
     def __repr__(self):
-        return f"<Suporte{self.mensagem}>"
+        return f"<suporte_usuario{self.mensagem}>"

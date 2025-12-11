@@ -6,6 +6,8 @@ from controllers.usuario import bp_usuarios
 from controllers.roupa_create import bp_roupa_create
 from models.usuario import Usuario
 from models.roupa_create import roupa_create
+from models.suporte import Suporte
+from models.pedidos_suporte import Suporte
 from models.endereco import Endereco
 
 
@@ -56,10 +58,10 @@ def roupa_create():
 def suporte():
     return render_template('suporte.html')
 
-@app.route('/pedido de suporte')
-def pedidodesuporte():
-    return render_template('pedido de suporte.html')
 
+@app.route("/pedidos_suporte")
+def pedidos_suporte():
+    return render_template("pedidos_suporte.html")
 
 @app.route('/pagina_admin')
 def pagina_admin():
