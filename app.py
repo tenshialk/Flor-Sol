@@ -1,199 +1,177 @@
-from flask import Flask, Blueprint, render_template, request, redirect , url_for, flash, session
+from flask import Flask, render_template, request, jsonify, redirect, session, url_for
+from datetime import datetime, timedelta
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
-from utils import db,lm
-from controllers.usuario import bp_usuarios
-from controllers.roupa_create import bp_roupa_create
-from models.usuario import Usuario
-from models.roupa_create import roupa_create
-from models.suporte_create import Suporte
-from models.endereco import Endereco
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
+from werkzeug.security import generate_password_hash, check_password_hash
+import os
+from functools import wraps
+import json
 
-
-# Inicializando o Flask
 app = Flask(__name__)
-
-# Configuração do banco de dados
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
-app.config['SECRET_KEY'] = 'PIZZA'
+app.config['SECRET_KEY'] = 'your-secret-key-here'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///flor_sol.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Inicializando o banco de dados
-db.init_app(app)
-lm.init_app(app)
-migrate = Migrate(app, db)
+db = SQLAlchemy(app)
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
 
-# Registrando Blueprints
-app.register_blueprint(bp_usuarios, url_prefix='/user')
+# Database Models
+class User(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password = db.Column(db.String(255), nullable=False)
+    role = db.Column(db.String(20), default='user')
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-# Rotas principais
+class Product(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(120), nullable=False)
+    description = db.Column(db.Text)
+    price = db.Column(db.Float, nullable=False)
+    category = db.Column(db.String(50))
+    image_url = db.Column(db.String(255))
+    stock = db.Column(db.Integer, default=0)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+class Order(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    total_price = db.Column(db.Float, nullable=False)
+    status = db.Column(db.String(20), default='pending')
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    items = db.relationship('OrderItem', backref='order', lazy=True)
+
+class OrderItem(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    order_id = db.Column(db.Integer, db.ForeignKey('order.id'), nullable=False)
+    product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
+    quantity = db.Column(db.Integer, nullable=False)
+    price = db.Column(db.Float, nullable=False)
+    product = db.relationship('Product')
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+# Helper function for admin routes
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not current_user.is_authenticated or current_user.role != 'admin':
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+# Routes
 @app.route('/')
-def capa():
-    return render_template('capa.html')
+def index():
+    products = Product.query.all()
+    return render_template('index.html', products=products)
 
-@app.route('/Volta')
-def Volta():
-    return render_template('volta.html')
-
-@app.route('/biblioteca')
-def biblioteca():
-    return render_template('biblioteca.html')
-
-@app.route('/inicio')
-def inicio():
-    return render_template('capa.html')
-
-@app.route('/roupa_create', methods=['GET', 'POST'])
-def roupa_create():
+@app.route('/register', methods=['GET', 'POST'])
+def register():
     if request.method == 'POST':
-        imagem = request.form.get('imagem')
-        preco = request.form.get('preco')
-        titulo = request.form.get('titulo')
-        descricao = request.form.get('descricao')
-        flash('Roupa cadastrada com sucesso!')
-    return render_template('roupa_create.html')
+        username = request.form.get('username')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        
+        if User.query.filter_by(username=username).first():
+            return render_template('register.html', error='Username already exists')
+        
+        user = User(username=username, email=email, password=generate_password_hash(password))
+        db.session.add(user)
+        db.session.commit()
+        return redirect(url_for('login'))
+    
+    return render_template('register.html')
 
-@app.route('/carrinho')
-def carrinho():
-    return render_template('carrinho.html')
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        user = User.query.filter_by(username=username).first()
+        
+        if user and check_password_hash(user.password, password):
+            login_user(user)
+            return redirect(url_for('index'))
+        else:
+            return render_template('login.html', error='Invalid username or password')
+    
+    return render_template('login.html')
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
 
 @app.route('/suporte')
 def suporte():
-    suporte = Suporte.query.first()  # pega o primeiro suporte
-    return render_template('suporte.html', suporte=suporte)
+    return render_template('suporte.html')
 
-@app.route('/pagina_admin')
-def pagina_admin():
-    return render_template('pagina_admin.html')
-
-@app.route('/perfil')
-def perfil():
-    return render_template('perfil.html')
-
-@app.route('/roupa_update')
-def roupa_update():
-    return render_template('roupa_update.html')
-
-@app.route('/gestao_endereco')
-def gestao_endereco():
-    endereco = Endereco.query.first()  # pegar o primeiro endereço
-    return render_template('gestao_endereco.html', endereco=endereco)
-
-@app.route('/suporte')
-def suporte():
-    suporte= pedidos_suporte.query.first()  # pegar o primeiro endereço
-    return render_template('suporte.html', suporte=suporte)
-
-@app.route('/salvar_endereco', methods=['POST'])
-def salvar_endereco():
-    # Pega dados do formulário
-    logradouro  = request.form['logradouro']
-    numero      = request.form['numero']
-    complemento = request.form['complemento']
-    bairro      = request.form['bairro']
-    cidade      = request.form['cidade']
-    estado      = request.form['estado']
-    cep         = request.form['cep']
-    referencia  = request.form['referencia']
-
-    # Cria o endereço
-    endereco = Endereco(
-        logradouro=logradouro,
-        numero=numero,
-        complemento=complemento,
-        bairro=bairro,
-        cidade=cidade,
-        estado=estado,
-        cep=cep,
-        referencia=referencia
-    )
-
-    # Salva no banco
-    db.session.add(endereco)
-    db.session.commit()
-
-    # Redireciona para a página que exibe o endereço cadastrado
-    return render_template('salvar_endereco.html', endereco=endereco)
-
-@app.route('/salvar_suporte', methods=['POST'])
-def salvar_suporte():
-    nome     = request.form['nome']
-    email    = request.form['email']
-    mensagem = request.form['mensagem']
-
-    suporte = Suporte(nome=nome, email=email, mensagem=mensagem)
-    db.session.add(suporte)
-    db.session.commit()
-
-    # Passa o objeto 'suporte' para o template
-    return render_template('salvar_suporte.html', suporte=suporte)
-
-
-@app.route('/atualizar_suporte', methods=['POST'])
-def atualizar_suporte():
-    # Pega o objeto Suporte pelo id
-    suporte = Suporte.query.get(request.form['id'])
+@app.route('/dashboard')
+@login_required
+def dashboard():
+    if current_user.role == 'admin':
+        orders = Order.query.all()
+        products = Product.query.all()
+    else:
+        orders = Order.query.filter_by(user_id=current_user.id).all()
+        products = None
     
-    # Atualiza os campos
-    suporte.nome     = request.form['nome']
-    suporte.email    = request.form['email']
-    suporte.mensagem = request.form['mensagem']
+    return render_template('dashboard.html', orders=orders, products=products)
+
+@app.route('/add-product', methods=['GET', 'POST'])
+@admin_required
+def add_product():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        description = request.form.get('description')
+        price = float(request.form.get('price'))
+        category = request.form.get('category')
+        stock = int(request.form.get('stock'))
+        
+        product = Product(name=name, description=description, price=price, category=category, stock=stock)
+        db.session.add(product)
+        db.session.commit()
+        return redirect(url_for('dashboard'))
     
-    # Salva as alterações
-    db.session.commit()
+    return render_template('add_product.html')
+
+@app.route('/api/products')
+def api_products():
+    products = Product.query.all()
+    return jsonify([{
+        'id': p.id,
+        'name': p.name,
+        'price': p.price,
+        'category': p.category,
+        'stock': p.stock
+    } for p in products])
+
+@app.route('/api/order', methods=['POST'])
+@login_required
+def api_order():
+    data = request.get_json()
+    items = data.get('items', [])
+    total_price = sum(item['price'] * item['quantity'] for item in items)
     
-    # Redireciona para a página de gestão de suportes
-    return redirect(url_for('atualizar_suporte'))  #
-
-
-
-@app.route('/atualizar_endereco', methods=['POST'])
-def atualizar_endereco():
-    endereco = Endereco.query.get(request.form['id'])
-    endereco.logradouro  = request.form['logradouro']
-    endereco.numero      = request.form['numero']
-    endereco.complemento = request.form['complemento']
-    endereco.bairro      = request.form['bairro']
-    endereco.cidade      = request.form['cidade']
-    endereco.estado      = request.form['estado']
-    endereco.cep         = request.form['cep']
-    endereco.referencia  = request.form['referencia']
+    order = Order(user_id=current_user.id, total_price=total_price)
+    db.session.add(order)
+    db.session.flush()
+    
+    for item in items:
+        order_item = OrderItem(order_id=order.id, product_id=item['id'], quantity=item['quantity'], price=item['price'])
+        db.session.add(order_item)
+    
     db.session.commit()
-    # Redireciona para a página de gestão de endereços
-    return redirect(url_for('gestao_endereco'))
-
-
-@app.route('/excluir_endereco',methods=['POST'])
-def excluir_endereco():
-    usuario = Usuario.query.first()
-    return render_template('excluir_endereco.html', dados=usuario, enderecos=usuario.enderecos)
-
-@app.route('/seus_dados')
-def seus_dados():
-    usuario = Usuario.query.first()
-    endereco = Endereco.query.first()
-    return render_template('seus_dados.html', dados=usuario, endereco=endereco)
-
-
-@app.route('/atualizar_dados', methods=['POST'])
-def atualizar_dados():
-    usuario = Usuario.query.first()  # Pega o primeiro usuário (ou ajuste para pegar pelo id)
-    usuario.nome  = request.form['nome']
-    usuario.email = request.form['email']
-    usuario.senha = request.form['senha']
-    db.session.commit()  # Salva as alterações no banco de dados
-    # Redireciona para a página que mostra os dados atualizados
-    return redirect(url_for('seus_dados'))
-
-
-@app.route('/altera_seus_dados',)
-def altera_seus_dados():
-    usuario = Usuario.query.first()
-    return render_template('altera_seus_dados.html', dados=usuario)
-
-@app.errorhandler(401)
-def acesso_negado(e):
-    return render_template('acesso_negado.html'), 404
+    return jsonify({'success': True, 'order_id': order.id})
 
 if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
     app.run(debug=True)
